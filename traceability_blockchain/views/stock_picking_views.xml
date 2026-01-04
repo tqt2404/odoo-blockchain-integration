@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_blockchain_full" model="ir.ui.view">
+        <field name="name">stock.picking.form.blockchain.full</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//header" position="inside">
+                <button name="action_verify_4_layers" 
+                        string="Verify Blockchain" 
+                        type="object" 
+                        class="btn-success"
+                        invisible="blockchain_status != 'done'"/>
+            </xpath>
+            
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="blockchain_status" widget="statusbar" statusbar_visible="draft,done" 
+                       invisible="picking_type_code != 'outgoing'"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Blockchain Seal" name="blockchain_seal" 
+                      invisible="picking_type_code != 'outgoing'">
+                    
+                    <group string="1. Dữ liệu Đóng gói (Sealed Data)">
+                        <div class="text-muted mb-3" colspan="2">
+                            <i class="fa fa-info-circle"/> Thông tin này được dùng để định danh gói hàng trong chuỗi Hash (Lấy từ tab "Thông tin bổ sung").
+                        </div>
+                        <group>
+                            <field name="carrier_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="carrier_tracking_ref" readonly="1" style="font-weight: bold; color: #000;"/>
+                        </group>
+                    </group>
+
+                    <separator string="Bằng chứng Kỹ thuật số (Digital Proofs)"/>
+                    
+                    <group>
+                        <field name="previous_data_hash" 
+                               widget="CopyClipboardChar" 
+                               string="Previous Hash"
+                               readonly="0" force_save="1"
+                               style="display: block; width: 100%; padding: 10px; 
+                                      text-align: center; 
+                                      font-family: 'Courier New', monospace; 
+                                      font-size: 14px; font-weight: 900; color: #000; 
+                                      background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 5px; 
+                                      margin-bottom: 15px;"/>
+                        
+                        <field name="blockchain_sealed_hash" 
+                               widget="CopyClipboardChar" 
+                               string="Data Hash"
+                               readonly="0" force_save="1"
+                               style="display: block; width: 100%; padding: 10px; 
+                                      text-align: center; 
+                                      font-family: 'Courier New', monospace; 
+                                      font-size: 14px; font-weight: 900; color: #000; 
+                                      background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 5px; 
+                                      margin-bottom: 15px;"/>
+                        
+                        <field name="tx_hash" 
+                               widget="CopyClipboardChar" 
+                               string="Transaction Hash"
+                               readonly="1"
+                               style="display: block; width: 100%; padding: 10px; 
+                                      text-align: center; 
+                                      font-family: 'Courier New', monospace; 
+                                      font-size: 14px; font-weight: 900; color: #000; 
+                                      background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 5px;"/> 
+                    </group>
+
+                    <separator string="Chi tiết các Lô hàng cấu thành"/>
+                    <field name="move_line_ids_without_package" readonly="1">
+                        <tree decoration-muted="not lot_id" limit="10">
+                            <field name="product_id" width="25%"/>
+                            <field name="lot_id" widget="badge" decoration-info="lot_id" width="15%"/>
+                            <field name="lot_genesis_hash" 
+                                   widget="CopyClipboardChar"
+                                   string="Genesis Hash (Gốc)"
+                                   optional="show"
+                                   style="font-family: 'Courier New', monospace; color: #333; font-weight: bold; font-size: 12px;"/>
+                            <field name="quantity" string="SL" width="10%"/>
+                        </tree>
+                    </field>
+                    
+                    <div class="alert alert-info text-center mt-3 shadow-sm" role="alert" invisible="blockchain_status == 'done'">
+                        <i class="fa fa-arrow-circle-up"/> Dữ liệu sẽ được tự động đóng gói và gửi lên Blockchain sau khi bạn bấm <b>Xác nhận (Validate)</b>.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

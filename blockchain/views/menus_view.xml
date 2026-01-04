@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="blockchain_menu_root"
+              name="Blockchain Connector"
+              sequence="5"
+              web_icon="blockchain,static/description/avalanche-blockchain-logo.png"
+              groups="base.group_system"/>
+
+    <menuitem id="blockchain_config_menu" name="Configuration" parent="blockchain_menu_root" sequence="99"/>
+    <menuitem id="blockchain_connector_menu" parent="blockchain_config_menu" sequence="1" name="Connectors" action="blockchain_connector_action"/>
+    <menuitem id="blockchain_account_menu" parent="blockchain_config_menu" sequence="2" name="Accounts" action="blockchain_account_action"/>
+    <menuitem id="blockchain_contract_menu" parent="blockchain_config_menu" sequence="3" name="Contracts" action="blockchain_contract_action"/>
+
+    <record id="base.menu_management" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+
+    <record id="contacts.menu_contacts" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+
+    <record id="spreadsheet_dashboard.spreadsheet_dashboard_menu_root" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+
+    <record id="website.menu_website_configuration" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+
+</odoo>

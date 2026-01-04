@@ -1,0 +1,30 @@
+{
+    "name": "Blockchain Connector",
+    "summary": "Smart Contract",
+    "version": "17.0.1.0.0",
+    "category": "Localization",
+    'author': "",
+    "depends": [
+        'contacts',
+        'base_setup',
+        'spreadsheet_dashboard',
+    ],
+    "data": [
+        'security/ir.model.access.csv',
+        'views/blockchain_connector_views.xml',
+        'wizard/blockchain_contract_wizard.xml',
+        'views/blockchain_contract_views.xml',
+        'views/blockchain_account_views.xml',
+        'wizard/blockchain_connector_wizard.xml',
+        'wizard/blockchain_account_wizard.xml',
+        'wizard/blockchain_account_send_wizard.xml',
+        'views/res_config_settings_views.xml',
+        'views/menus_view.xml',
+    ],
+    'demo': [
+        'demo/blockchain_demo.xml',
+    ],
+    "external_dependencies": {"python": ["web3"]},
+    'installable': True,
+    'auto_install': False,
+}

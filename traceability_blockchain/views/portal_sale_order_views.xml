@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sale_order_portal_content_btn_inherit" inherit_id="sale.sale_order_portal_content">
+            <xpath expr="//table[@id='sales_order_table']/thead/tr" position="inside">
+                <th class="text-center">Truy xuất</th>
+            </xpath>
+
+            <xpath expr="//table[@id='sales_order_table']/tbody//tr" position="inside">
+                <td class="text-center">
+                    <t t-set="m_lines" t-value="line.sudo().move_ids.mapped('move_line_ids')"/>
+                    <t t-set="done_lots" t-value="m_lines.filtered(lambda ml: ml.lot_id and ml.state == 'done')"/>
+                    
+                    <t t-if="done_lots">
+                        <t t-foreach="set(done_lots.mapped('lot_id'))" t-as="lot">
+                            <div class="mb-2">
+                                <a t-attf-href="/traceability/info/#{lot.id}?picking_id=#{done_lots.filtered(lambda ml: ml.lot_id == lot).picking_id.id}" 
+                                   class="btn btn-sm btn-outline-info" 
+                                   target="_blank">
+                                    <i class="fa fa-cubes"/> Truy xuất
+                                </a>
+                                <div style="font-size: 10px; margin-top: 2px;"><t t-esc="lot.name"/></div>
+                            </div>
+                        </t>
+                    </t>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="traceability_full_page" name="Traceability Page">
+            <t t-call="website.layout">
+                <div class="container mt-5 mb-5">
+                    
+                    <t t-if="error_msg">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 text-center">
+                                <div class="alert alert-danger shadow-lg p-5">
+                                    <h1 class="display-4"><i class="fa fa-ban"/></h1>
+                                    <h3 class="mt-3">Dữ liệu không an toàn!</h3>
+                                    <hr/>
+                                    <div class="text-left bg-white p-3 rounded border border-danger mt-4 text-danger">
+                                        <strong>Chi tiết:</strong> <t t-esc="error_msg"/>
+                                    </div>
+                                    <div class="mt-5">
+                                        <a href="#" onclick="window.close()" class="btn btn-outline-danger">Đóng</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <t t-else="">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div t-if="success_msg" class="alert alert-success text-center mb-4 shadow-sm">
+                                    <i class="fa fa-check-circle fa-lg"/> <span class="ml-2 font-weight-bold"><t t-esc="success_msg"/></span>
+                                </div>
+
+                                <h2 class="mb-4 text-center font-weight-bold text-dark">
+                                    TRUY XUẤT NGUỒN GỐC
+                                </h2>
+
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-8">
+                                                <small class="text-muted text-uppercase">Sản phẩm</small>
+                                                <h3 class="text-dark font-weight-bold mb-3"><t t-esc="trace_info['product']"/></h3>
+                                                
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-muted mr-2">Serial / Lô:</span>
+                                                    <span class="font-weight-bold px-3 py-1" style="border: 2px solid #333; border-radius: 4px; color: #333;">
+                                                        <t t-esc="trace_info['lot_name']"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <t t-if="trace_info['type'] == 'manufacturing'">
+                                                    <span class="px-3 py-2 font-weight-bold" style="border: 1px solid #007bff; color: #007bff; border-radius: 20px;">
+                                                        <i class="fa fa-industry"/> Hàng Sản xuất
+                                                    </span>
+                                                </t>
+                                                <t t-if="trace_info['type'] == 'trading'">
+                                                    <span class="px-3 py-2 font-weight-bold" style="border: 1px solid #28a745; color: #28a745; border-radius: 20px;">
+                                                        <i class="fa fa-shopping-cart"/> Hàng Thương mại
+                                                    </span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                        
+                                        <div t-if="trace_info['genesis_hash']" class="mt-4 pt-3 border-top">
+                                            <small class="text-uppercase font-weight-bold text-muted">Blockchain Genesis Hash</small>
+                                            <div class="d-flex align-items-center mt-1">
+                                                <i class="fa fa-link text-success mr-2"/>
+                                                <code style="color: #666; word-break: break-all;"><t t-esc="trace_info['genesis_hash']"/></code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <t t-if="trace_info['type'] == 'manufacturing'">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-header bg-white border-bottom">
+                                            <h5 class="mb-0 text-dark font-weight-bold">Quy trình Sản xuất</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row mb-4">
+                                                <div class="col-md-12 mb-3">
+                                                    <small class="text-muted">Lệnh Sản xuất (MO)</small>
+                                                    <div class="font-weight-bold text-dark"><t t-esc="trace_info['data']['mo_reference']"/></div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <small class="text-muted">Thời gian sản xuất</small>
+                                                    <div class="font-weight-bold"><t t-esc="trace_info['data']['date_finished_str']"/></div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <small class="text-muted">Nhà máy</small>
+                                                    <div class="font-weight-bold"><t t-esc="trace_info['data']['factory']"/></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <h6 class="text-dark font-weight-bold border-bottom pb-2 mb-3">Thành phần Nguyên liệu</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-sm">
+                                                    <thead class="bg-light text-muted">
+                                                        <tr>
+                                                            <th class="border-0">Tên Nguyên liệu</th>
+                                                            <th class="border-0">Số Lô</th>
+                                                            <th class="border-0">Lượng dùng</th>
+                                                            <th class="border-0">Nguồn gốc (NCC)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="trace_info['data']['components']" t-as="comp">
+                                                            <tr>
+                                                                <td class="align-middle"><t t-esc="comp['product']"/></td>
+                                                                
+                                                                <td class="align-middle">
+                                                                    <span style="border: 1px solid #ccc; padding: 2px 6px; border-radius: 4px; color: #555; font-size: 0.9em;">
+                                                                        <t t-esc="comp['lot']"/>
+                                                                    </span>
+                                                                </td>
+                                                                
+                                                                <td class="align-middle"><t t-esc="comp['qty']"/> <t t-esc="comp['uom']"/></td>
+                                                                <td class="align-middle">
+                                                                    <t t-if="comp['supplier']">
+                                                                        <div class="font-weight-bold text-dark"><t t-esc="comp['supplier']['partner']"/></div>
+                                                                        <small class="text-muted">Ref: <t t-esc="comp['supplier']['reference']"/></small>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="text-muted small">Kho nội bộ</span>
+                                                                    </t>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <t t-elif="trace_info['type'] == 'trading'">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-header bg-white border-bottom">
+                                            <h5 class="mb-0 text-dark font-weight-bold">Thông tin Nhập hàng</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 border-right">
+                                                    <small class="text-muted text-uppercase">Nhà cung cấp</small>
+                                                    <h4 class="text-dark mt-1"><t t-esc="trace_info['data']['supplier']"/></h4>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <small class="text-muted text-uppercase">Ngày nhập</small>
+                                                    <div class="font-weight-bold"><span t-esc="trace_info['data']['receipt_date']" t-options='{"widget": "date"}'/></div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <small class="text-muted text-uppercase">Chứng từ (PO)</small>
+                                                    <div class="font-weight-bold text-dark"><t t-esc="trace_info['data']['reference']"/></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <t t-else="">
+                                    <div class="alert alert-light border text-center text-muted">
+                                        Lô hàng này được khởi tạo từ tồn kho đầu kỳ.
+                                    </div>
+                                </t>
+
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white border-bottom">
+                                        <h5 class="mb-0 text-dark font-weight-bold">Nhật ký Lô hàng</h5>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead class="bg-light text-muted">
+                                                <tr>
+                                                    <th class="border-0">Thời gian</th>
+                                                    <th class="border-0">Hành trình</th>
+                                                    <th class="border-0">Chứng từ</th>
+                                                    <th class="border-0 text-right">Số lượng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="move_lines" t-as="move">
+                                                    <tr>
+                                                        <td class="text-nowrap align-middle">
+                                                            <span t-field="move.date" t-options='{"widget": "datetime", "format": "dd/MM/yyyy HH:mm"}'/>
+                                                        </td>
+                                                        <td class="align-middle">
+                                                            <span class="text-muted">
+                                                                <t t-if="move.location_id.usage == 'supplier'">Nhà cung cấp</t>
+                                                                <t t-elif="move.location_id.usage == 'customer'">Khách hàng</t>
+                                                                <t t-elif="move.location_id.usage == 'production'">Sản xuất</t>
+                                                                <t t-elif="move.location_id.usage == 'inventory'">Điều chỉnh</t>
+                                                                <t t-else=""><t t-esc="move.location_id.name"/></t>
+                                                            </span>
+                                                            <i class="fa fa-long-arrow-right mx-2 text-dark"/>
+                                                            <span class="font-weight-bold text-dark">
+                                                                <t t-if="move.location_dest_id.usage == 'supplier'">Nhà cung cấp</t>
+                                                                <t t-elif="move.location_dest_id.usage == 'customer'">Khách hàng</t>
+                                                                <t t-elif="move.location_dest_id.usage == 'production'">Sản xuất</t>
+                                                                <t t-elif="move.location_dest_id.usage == 'inventory'">Điều chỉnh</t>
+                                                                <t t-else=""><t t-esc="move.location_dest_id.name"/></t>
+                                                            </span>
+                                                        </td>
+                                                        <td class="align-middle">
+                                                            <span style="border: 1px solid #ddd; background: white; padding: 2px 6px; border-radius: 3px; font-size: 0.9em;">
+                                                                <t t-esc="move.reference"/>
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-right font-weight-bold align-middle">
+                                                            <span t-field="move.quantity"/> <span t-field="move.product_uom_id"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-5 mb-5">
+                                     <a href="#" onclick="window.close()" class="btn btn-dark px-4">
+                                         Đóng trang
+                                     </a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

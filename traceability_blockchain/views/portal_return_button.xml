@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_return_button_inherit" inherit_id="sale.sale_order_portal_content">
+        
+        <xpath expr="//div[@id='introduction']" position="inside">
+            <div class="mt-3 mb-3">
+                <t t-set="has_return" t-value="False"/>
+                <t t-foreach="sale_order.picking_ids" t-as="p">
+                    <t t-if="p.picking_type_code == 'incoming' and p.state != 'cancel'">
+                        <t t-set="has_return" t-value="True"/>
+                    </t>
+                </t>
+
+                <t t-if="sale_order.state in ['sale', 'done'] and not has_return">
+                     <a t-attf-href="/my/orders/return/#{sale_order.id}" 
+                       class="btn btn-warning shadow-sm text-white"
+                       style="font-weight: bold;"
+                       title="Yêu cầu trả hàng ngay">
+                       <i class="fa fa-undo"/> Yêu cầu Trả hàng
+                    </a>
+                </t>
+
+                <t t-if="has_return">
+                    <span class="badge badge-info p-2"><i class="fa fa-check"/> Đã gửi yêu cầu trả hàng</span>
+                </t>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='introduction']" position="before">
+            <t t-if="request.params.get('return_created')">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Thành công!</strong> Phiếu trả hàng đã được tạo.
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                </div>
+            </t>
+            
+            <t t-if="request.params.get('error_msg')">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Lỗi:</strong> 
+                    <t t-if="request.params.get('error_msg') == 'Da_co_yeu_cau_tra_hang'">
+                        Đơn hàng này đã có yêu cầu trả hàng đang xử lý.
+                    </t>
+                    <t t-elif="request.params.get('error_msg') == 'Don_hang_chua_hoan_thanh'">
+                        Đơn hàng chưa được giao thành công, không thể trả hàng.
+                    </t>
+                    <t t-else="">
+                        <t t-esc="request.params.get('error_msg')"/>
+                    </t>
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                </div>
+            </t>
+        </xpath>
+
+    </template>
+</odoo>
