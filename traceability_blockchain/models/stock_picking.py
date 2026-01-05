@@ -1,6 +1,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import hashlib
+import logging 
+
+_logger = logging.getLogger(__name__)
 
 class StockPicking(models.Model):
     _name = 'stock.picking'
