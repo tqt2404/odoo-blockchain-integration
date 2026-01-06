@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import hashlib
 import logging 
+from urllib.parse import quote
 
 _logger = logging.getLogger(__name__)
 
@@ -31,8 +32,8 @@ class StockPicking(models.Model):
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url') or ''
             base_url = base_url.rstrip('/') 
             
-            # Tạo link dẫn tới trang truy xuất cụ thể của Lô hàng đó
-            return f"{base_url}/traceability/info/{lot.id}?picking_id={self.id}"
+            raw_url = f"{base_url}/traceability/info/{lot.id}?picking_id={self.id}"
+            return quote(raw_url, safe='')
         except Exception:
             return ""
 

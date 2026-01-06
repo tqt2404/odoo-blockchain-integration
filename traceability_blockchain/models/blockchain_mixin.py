@@ -53,7 +53,7 @@ class BlockchainLogMixin(models.AbstractModel):
             raise UserError(f"Không thể đọc dữ liệu từ Blockchain: {str(e)}")
 
     def write_log_to_blockchain(self, ref_id, final_hash):
-        """Ghi Hash vào Smart Contract (Tốn Gas)"""
+        """Ghi Hash vào Smart Contract"""
         self.ensure_one()
         try:
             contract_record, account_record = self._get_blockchain_config()

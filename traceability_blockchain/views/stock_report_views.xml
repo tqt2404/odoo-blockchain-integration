@@ -4,29 +4,44 @@
         
         <xpath expr="//div[@name='div_sched_date']" position="after">
             
-            <div class="row mt-3" t-if="o.move_line_ids.lot_id">
-                <div class="col-12 mb-2">
+            <div t-if="o.move_line_ids.lot_id" style="margin-top: 15px; page-break-inside: avoid;">
+                
+                <div style="margin-bottom: 10px;">
                     <strong style="font-size: 13px;">BLOCKCHAIN TRACEABILITY (TRUY XUẤT NGUỒN GỐC):</strong>
                 </div>
                 
-                <t t-foreach="o.move_line_ids.mapped('lot_id')" t-as="lot">
-                    <div class="col-auto text-center mb-3" style="border: 1px solid #dee2e6; padding: 8px; margin-right: 12px; border-radius: 4px; background-color: #f8f9fa; min-width: 100px;">
+                <div style="width: 100%;">
+                    
+                    <t t-foreach="o.move_line_ids.mapped('lot_id')" t-as="lot">
                         
-                        <span style="font-size: 11px; font-weight: bold;">Lô: <t t-esc="lot.name"/></span>
-                        <br/>
-                        
-                        <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.get_blockchain_url_for_lot(lot), 200, 200)" 
-                             style="width:85px;height:85px; margin-top: 4px;" 
-                             alt="QR Code"/>
-                        <br/>
-                        
-                        <div t-if="lot.genesis_hash" style="margin-top: 4px;">
-                            <span style="font-size: 7px; color: #666; font-family: monospace;">
-                                <t t-esc="lot.genesis_hash[:10]"/>...
-                            </span>
+                        <div style="display: inline-block; 
+                                    vertical-align: top; 
+                                    width: 120px; 
+                                    text-align: center; 
+                                    border: 1px solid #dee2e6; 
+                                    padding: 8px; 
+                                    margin-right: 10px; 
+                                    margin-bottom: 10px;
+                                    border-radius: 4px; 
+                                    background-color: #f8f9fa;">
+                            
+                            <div style="font-size: 11px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                Lô: <t t-esc="lot.name"/>
+                            </div>
+                            
+                            <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.get_blockchain_url_for_lot(lot), 200, 200)" 
+                                 style="width: 85px; height: 85px; margin-top: 5px;" 
+                                 alt="QR Code"/>
+                            
+                            <div t-if="lot.genesis_hash" style="margin-top: 4px;">
+                                <span style="font-size: 8px; color: #666; font-family: monospace;">
+                                    <t t-esc="lot.genesis_hash[:10]"/>...
+                                </span>
+                            </div>
+
                         </div>
-                    </div>
-                </t>
+                    </t>
+                </div>
             </div>
         </xpath>
 

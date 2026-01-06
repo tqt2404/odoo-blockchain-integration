@@ -57,9 +57,9 @@ class BlockchainAccount(models.Model):
             account = w3.eth.account.create()
             self.address = Web3.to_checksum_address(account.address)
             private_key = account.key
-            _logger.info('=====PRIVATE KEY=======')
+            _logger.info('PRIVATE KEY')
             _logger.info(private_key)
-            _logger.info('=====PRIVATE KEY=======')
+            _logger.info('PRIVATE KEY')
             keystore = account.encrypt(password)
             self.encrypted_key = keystore
         return
