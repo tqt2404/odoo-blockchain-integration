@@ -1,7 +1,7 @@
 {
     'name': 'Blockchain Traceability',
     'version': '17.0.1.0.0', 
-    'summary': 'Traceability from Purchase -> Manufacturing -> Sales on Blockchain',
+    'summary': 'Traceability on Blockchain',
     'author': 'myname',
     'depends': [
         'base', 
